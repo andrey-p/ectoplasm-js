@@ -62,14 +62,14 @@ describe("main", function () {
       });
     });
   });
-  describe("#call()", function () {
+  describe("#run()", function () {
     beforeEach(function (done) {
       bridge.initialise(null, done);
     });
     afterEach(bridge.cleanup);
 
     function ping(msg, callback) {
-      bridge.call("ping", {
+      bridge.run("ping", {
         message: msg
       }, callback);
     }
@@ -100,7 +100,7 @@ describe("main", function () {
       });
     });
   });
-  describe("#call() with scripts", function () {
+  describe("#run() with scripts", function () {
     afterEach(bridge.cleanup);
 
     it("should be able to load an existing script and execute it", function (done) {
@@ -114,7 +114,7 @@ describe("main", function () {
           exponent: 3
         };
 
-        bridge.call("pow", args, function (err, result) {
+        bridge.run("pow", args, function (err, result) {
           should.not.exist(err);
           result.should.equal(8);
           done();
@@ -131,7 +131,7 @@ describe("main", function () {
           thisIs: "wrong"
         };
 
-        bridge.call("pow", args, function (err, result) {
+        bridge.run("pow", args, function (err, result) {
           should.exist(err);
           should.not.exist(result);
           err.should.equal("needs to pass a number and exponent");
@@ -150,7 +150,7 @@ describe("main", function () {
           exponent: 3
         };
 
-        bridge.call("doSomething", args, function (err) {
+        bridge.run("doSomething", args, function (err) {
           should.not.exist(err);
           done();
         });
