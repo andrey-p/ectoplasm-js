@@ -60,7 +60,10 @@ ecto.initialise(scripts, function (err) {
 });
 ```
 
-`doThings.js` must expose a single method called `run`:
+Scripts
+---
+
+Your script must expose a single method called `run`, for example:
 
 ```javascript
 // inside doThings.js
@@ -71,6 +74,20 @@ exports.run = function (args, callback) {
     callback("error!");
   }
 };
+```
+
+Two scripts are already made available, `ping` and `addScripts`.
+
+`ping` simply returns your args back to you - in case you want to test things.
+
+`addScripts` adds scripts at runtime, much like `initialise`:
+
+```javascript
+ecto.run("addScripts", {
+  doSomethingElse: "/absolute/path/to/doSomethingElse.js"
+}, function (err) {
+  // you can now run doSomethingElse, too
+});
 ```
 
 License
