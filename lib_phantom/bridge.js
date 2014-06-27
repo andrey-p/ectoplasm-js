@@ -21,7 +21,7 @@ var port = phantom.args[0],
 function emit(eventName, id, body) {
   var js = "function () { socket.emit(\"" + eventName + "\"";
 
-  if (id && body) {
+  if (id) {
     js += ", " + id + ", " + JSON.stringify(body);
   }
 
@@ -46,7 +46,7 @@ controlPage.onAlert = function (msg) {
 
   script.run(callArgs.args, function (err, output) {
     if (err) {
-      emit("error", id, err);
+      emit("err", id, err);
     } else {
       emit("output", id, output);
     }
@@ -54,11 +54,20 @@ controlPage.onAlert = function (msg) {
 };
 
 addScriptsScript.run = function (args, callback) {
+  var noError = true;
   Object.keys(args).forEach(function (scriptName) {
-    scripts[scriptName] = require(args[scriptName]);
+    try {
+      scripts[scriptName] = require(args[scriptName]);
+    } catch (e) {
+      noError = false;
+      callback("could not find script " + scriptName
+        + " - tried looking at " + args[scriptName]);
+    }
   });
 
-  callback(null, "hello");
+  if (noError) {
+    callback();
+  }
 };
 
 controlPage.onLoadFinished = function () {

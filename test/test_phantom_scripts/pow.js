@@ -1,5 +1,7 @@
 exports.run = function (args, callback) {
-  var result = Math.pow(args.number, args.exponent);
-
-  callback(null, result);
+  if (args.number && args.exponent) {
+    callback(null, Math.pow(args.number, args.exponent));
+  } else {
+    callback("needs to pass a number and exponent");
+  }
 };

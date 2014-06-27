@@ -35,6 +35,17 @@ describe("bridge", function () {
         done();
       });
     });
+    it("should fail with a meaningful error if the script doesn't exist", function (done) {
+      var scripts = {
+        foo: "does/not/exist"
+      };
+
+      bridge.initialise(scripts, function (err) {
+        should.exist(err);
+        err.should.startWith("could not find");
+        done();
+      });
+    });
   });
   describe("#cleanup()", function () {
     beforeEach(function (done) {
@@ -106,6 +117,41 @@ describe("bridge", function () {
         bridge.call("pow", args, function (err, result) {
           should.not.exist(err);
           result.should.equal(8);
+          done();
+        });
+      });
+    });
+    it("should return any error that the script returns", function (done) {
+      var scripts = {
+        pow: __dirname + "/test_phantom_scripts/pow.js"
+      };
+
+      bridge.initialise(scripts, function () {
+        var args = {
+          thisIs: "wrong"
+        };
+
+        bridge.call("pow", args, function (err, result) {
+          should.exist(err);
+          should.not.exist(result);
+          err.should.equal("needs to pass a number and exponent");
+          done();
+        });
+      });
+    });
+    it("shouldn't error out if it tries to run a script that doesn't return a value", function (done) {
+      var scripts = {
+        doSomething: __dirname + "/test_phantom_scripts/doSomething.js"
+      };
+
+      bridge.initialise(scripts, function () {
+        var args = {
+          number: 2,
+          exponent: 3
+        };
+
+        bridge.call("doSomething", args, function (err) {
+          should.not.exist(err);
           done();
         });
       });

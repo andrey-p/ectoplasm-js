@@ -1,6 +1,6 @@
 {
   "name": "ectoplasm",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Andrey Pissantchev",
   "license": "MIT",
   "description": "Lightweight bridge between NodeJS and PhantomJS",
