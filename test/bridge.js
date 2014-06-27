@@ -17,7 +17,7 @@ describe("bridge", function () {
     });
 
     it("should get a phantom process going", function (done) {
-      bridge.initialise(function () {
+      bridge.initialise(null, function () {
         helper.checkIfProcessExists("phantomjs", function (err, exists) {
           should.not.exist(err);
           exists.should.equal(true, "phantom process should exist");
@@ -25,9 +25,21 @@ describe("bridge", function () {
         });
       });
     });
+    it("should be able to load scripts", function (done) {
+      var scripts = {
+        pow: __dirname + "/test_phantom_scripts/pow.js"
+      };
+
+      bridge.initialise(scripts, function (err) {
+        should.not.exist(err);
+        done();
+      });
+    });
   });
   describe("#cleanup()", function () {
-    beforeEach(bridge.initialise);
+    beforeEach(function (done) {
+      bridge.initialise(null, done);
+    });
 
     it("should not leave a phantom process after running cleanup", function (done) {
       bridge.cleanup(function () {
@@ -40,7 +52,9 @@ describe("bridge", function () {
     });
   });
   describe("#call()", function () {
-    beforeEach(bridge.initialise);
+    beforeEach(function (done) {
+      bridge.initialise(null, done);
+    });
     afterEach(bridge.cleanup);
 
     function ping(msg, callback) {
@@ -72,6 +86,28 @@ describe("bridge", function () {
         });
 
         done();
+      });
+    });
+  });
+  describe("#call() with scripts", function () {
+    afterEach(bridge.cleanup);
+
+    it("should be able to load an existing script and execute it", function (done) {
+      var scripts = {
+        pow: __dirname + "/test_phantom_scripts/pow.js"
+      };
+
+      bridge.initialise(scripts, function () {
+        var args = {
+          number: 2,
+          exponent: 3
+        };
+
+        bridge.call("pow", args, function (err, result) {
+          should.not.exist(err);
+          result.should.equal(8);
+          done();
+        });
       });
     });
   });

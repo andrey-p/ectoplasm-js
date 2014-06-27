@@ -4,8 +4,10 @@
 var port = phantom.args[0],
   controlPage = require("webpage").create(),
   system = require("system"),
+  addScriptsScript = {},
   scripts = {
-    ping: require("./ping")
+    ping: require("./ping"),
+    addScripts: addScriptsScript
   };
 
 /*
@@ -51,7 +53,16 @@ controlPage.onAlert = function (msg) {
   });
 };
 
+addScriptsScript.run = function (args, callback) {
+  Object.keys(args).forEach(function (scriptName) {
+    scripts[scriptName] = require(args[scriptName]);
+  });
+
+  callback(null, "hello");
+};
+
 controlPage.onLoadFinished = function () {
   emit("ready");
 };
+
 controlPage.open('http://127.0.0.1:' + port + '/');
