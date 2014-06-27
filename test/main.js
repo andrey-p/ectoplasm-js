@@ -2,10 +2,10 @@
 
 var should = require("should"),
   async = require("async"),
-  bridge = require("../lib/bridge"),
+  bridge = require("../lib/main"),
   helper = require("./helper");
 
-describe("bridge", function () {
+describe("main", function () {
   // clean up in case a test fails
   after(function (done) {
     helper.killProcess("phantomjs", done);
