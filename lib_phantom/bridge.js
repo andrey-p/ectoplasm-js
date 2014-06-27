@@ -2,7 +2,7 @@
 var port = phantom.args[0],
   controlPage = require("webpage").create(),
   system = require("system"),
-  scriptModules = {
+  scripts = {
     ping: require("./ping")
   };
 
@@ -37,7 +37,7 @@ controlPage.onAlert = function (msg) {
   "use strict";
   var callArgs,
     id,
-    scriptModule;
+    script;
 
   if (msg === "exit") {
     phantom.exit();
@@ -45,10 +45,10 @@ controlPage.onAlert = function (msg) {
 
   callArgs = JSON.parse(msg);
 
-  scriptModule = scriptModules[callArgs.method];
+  script = scripts[callArgs.method];
   id = callArgs.id;
 
-  scriptModule.handleArgs(callArgs.args, function (err, response) {
+  script.run(callArgs.args, function (err, response) {
     if (err) {
       error(id, err);
     } else {
