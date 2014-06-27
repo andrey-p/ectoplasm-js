@@ -1,4 +1,6 @@
 /*globals document: false, phantom: false*/
+"use strict";
+
 var port = phantom.args[0],
   controlPage = require("webpage").create(),
   system = require("system"),
@@ -14,27 +16,19 @@ var port = phantom.args[0],
  * see the comments in lib/bridge.js
  */
 
-function output(id, body) {
-  "use strict";
-  controlPage.evaluate('function(){socket.emit("output",' + id + ','
-    + JSON.stringify(body)
-    + ');}');
-}
+function emit(eventName, id, body) {
+  var js = "function () { socket.emit(\"" + eventName + "\"";
 
-function error(id, body) {
-  "use strict";
-  controlPage.evaluate('function(){socket.emit("error",' + id + ','
-    + JSON.stringify(body)
-    + ');}');
-}
+  if (id && body) {
+    js += ", " + id + ", " + JSON.stringify(body);
+  }
 
-function ready() {
-  "use strict";
-  controlPage.evaluate('function(){socket.emit("ready");}');
+  js += ");}";
+
+  controlPage.evaluate(js);
 }
 
 controlPage.onAlert = function (msg) {
-  "use strict";
   var callArgs,
     id,
     script;
@@ -48,14 +42,16 @@ controlPage.onAlert = function (msg) {
   script = scripts[callArgs.method];
   id = callArgs.id;
 
-  script.run(callArgs.args, function (err, response) {
+  script.run(callArgs.args, function (err, output) {
     if (err) {
-      error(id, err);
+      emit("error", id, err);
     } else {
-      output(id, response);
+      emit("output", id, output);
     }
   });
 };
 
-controlPage.onLoadFinished = ready;
+controlPage.onLoadFinished = function () {
+  emit("ready");
+};
 controlPage.open('http://127.0.0.1:' + port + '/');
