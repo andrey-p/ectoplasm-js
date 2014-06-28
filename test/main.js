@@ -46,6 +46,17 @@ describe("main", function () {
         done();
       });
     });
+    it("should fail with a meaningful error if the script doesn't expose the #run() method", function (done) {
+      var scripts = {
+        wrong: __dirname + "/test_phantom_scripts/wrongScript.js"
+      };
+
+      bridge.initialise(scripts, function (err) {
+        should.exist(err);
+        err.should.startWith("script wrong does not expose a #run() method");
+        done();
+      });
+    });
   });
   describe("#cleanup()", function () {
     beforeEach(function (done) {
@@ -78,6 +89,13 @@ describe("main", function () {
       ping("test", function (err, result) {
         should.not.exist(err);
         result.should.equal("test");
+        done();
+      });
+    });
+    it("should return a meaningful error when you try and call a script that doesn't exist", function (done) {
+      bridge.run("doesNotExist", {}, function (err) {
+        should.exist(err);
+        err.should.startWith("tried running a script that didn't exist: doesNotExist");
         done();
       });
     });

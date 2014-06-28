@@ -44,6 +44,10 @@ controlPage.onAlert = function (msg) {
   script = scripts[callArgs.method];
   id = callArgs.id;
 
+  if (!script) {
+    return emit("err", id, "tried running a script that didn't exist: " + callArgs.method);
+  }
+
   script.run(callArgs.args, function (err, output) {
     if (err) {
       emit("err", id, err);
@@ -62,6 +66,11 @@ addScriptsScript.run = function (args, callback) {
       noError = false;
       callback("could not find script " + scriptName
         + " - tried looking at " + args[scriptName]);
+    }
+
+    if (!scripts[scriptName].run) {
+      noError = false;
+      callback("script " + scriptName + " does not expose a #run() method");
     }
   });
 
