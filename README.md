@@ -22,7 +22,7 @@ Installing
 API
 ---
 
-### initialise(scripts, callback)
+### initialise(scripts, callback) or initialize(scripts, callback)
 
 Pass your script names as an object, for instance:
 
@@ -36,8 +36,6 @@ ecto.initialise(scripts, function (err) {
   // err is populated if it can't find the scripts
 });
 ```
-
-Sorry about the British spelling there.
 
 ### cleanup(callback)
 
