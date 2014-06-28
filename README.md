@@ -9,10 +9,10 @@ Why is this needed?
 [node-phantom](https://github.com/alexscheelmeyer/node-phantom) is all nice and good but the callback system does get a bit clunky, e.g. if you're setting a bunch of properties at the same time.
 Plus, it lacks the flexibility you'd get from using PhantomJS direct.
 
-Using PhantomJS on its own is all good and nice but calling `exec` all the time is a faff, and there's a noticeable delay as PhantomJS starts up.
+Using PhantomJS on its own is all good and nice but calling `exec` all the time and dealing with `stdout` and `stderr` is a faff, plus there's a noticeable delay every time you fire up PhantomJS.
 This is annoying if you need to run your scripts multiple times in a row.
 
-**Ectoplasm** tries to hit a happy middle, using node-phantom's sockets method but allowing you to run your own scripts.
+**Ectoplasm** tries to hit a happy middle, using node-phantom's sockets method to manage a continuous Phantom process but allowing you to run your own scripts.
 
 Installing
 ---

@@ -3,7 +3,9 @@
   "version": "0.1.1",
   "author": "Andrey Pissantchev",
   "license": "MIT",
-  "description": "Lightweight bridge between NodeJS and PhantomJS",
+  "description": "Alternative bridge between NodeJS and PhantomJS",
+  "keywords": [
+    ],
   "main": "./index.js",
   "repository": {
     "type": "git",
