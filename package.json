@@ -5,7 +5,10 @@
   "license": "MIT",
   "description": "Alternative bridge between NodeJS and PhantomJS",
   "keywords": [
-    ],
+    "phantom",
+    "phantomjs",
+    "bridge"
+  ],
   "main": "./index.js",
   "repository": {
     "type": "git",
