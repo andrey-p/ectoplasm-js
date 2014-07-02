@@ -2,7 +2,7 @@
 
 var should = require("should"),
   async = require("async"),
-  bridge = require("../lib/main"),
+  ecto = require("../lib/main"),
   helper = require("./helper");
 
 describe("main", function () {
@@ -17,7 +17,7 @@ describe("main", function () {
     });
 
     it("should get a phantom process going", function (done) {
-      bridge.initialise(null, function () {
+      ecto.initialise(null, function () {
         helper.checkIfProcessExists("phantomjs", function (err, exists) {
           should.not.exist(err);
           exists.should.equal(true, "phantom process should exist");
@@ -30,7 +30,7 @@ describe("main", function () {
         pow: __dirname + "/test_phantom_scripts/pow.js"
       };
 
-      bridge.initialise(scripts, function (err) {
+      ecto.initialise(scripts, function (err) {
         should.not.exist(err);
         done();
       });
@@ -40,7 +40,7 @@ describe("main", function () {
         foo: "does/not/exist"
       };
 
-      bridge.initialise(scripts, function (err) {
+      ecto.initialise(scripts, function (err) {
         should.exist(err);
         err.should.startWith("could not find");
         done();
@@ -51,7 +51,7 @@ describe("main", function () {
         wrong: __dirname + "/test_phantom_scripts/wrongScript.js"
       };
 
-      bridge.initialise(scripts, function (err) {
+      ecto.initialise(scripts, function (err) {
         should.exist(err);
         err.should.startWith("script wrong does not expose a #run() method");
         done();
@@ -60,11 +60,11 @@ describe("main", function () {
   });
   describe("#cleanup()", function () {
     beforeEach(function (done) {
-      bridge.initialise(null, done);
+      ecto.initialise(null, done);
     });
 
     it("should not leave a phantom process after running cleanup", function (done) {
-      bridge.cleanup(function () {
+      ecto.cleanup(function () {
         helper.checkIfProcessExists("phantomjs", function (err, exists) {
           should.not.exist(err);
           exists.should.equal(false, "phantom process should not exist");
@@ -75,12 +75,12 @@ describe("main", function () {
   });
   describe("#run()", function () {
     beforeEach(function (done) {
-      bridge.initialise(null, done);
+      ecto.initialise(null, done);
     });
-    afterEach(bridge.cleanup);
+    afterEach(ecto.cleanup);
 
     function ping(msg, callback) {
-      bridge.run("ping", {
+      ecto.run("ping", {
         message: msg
       }, callback);
     }
@@ -93,7 +93,7 @@ describe("main", function () {
       });
     });
     it("should return a meaningful error when you try and call a script that doesn't exist", function (done) {
-      bridge.run("doesNotExist", {}, function (err) {
+      ecto.run("doesNotExist", {}, function (err) {
         should.exist(err);
         err.should.startWith("tried running a script that didn't exist: doesNotExist");
         done();
@@ -119,20 +119,20 @@ describe("main", function () {
     });
   });
   describe("#run() with scripts", function () {
-    afterEach(bridge.cleanup);
+    afterEach(ecto.cleanup);
 
     it("should be able to load an existing script and execute it", function (done) {
       var scripts = {
         pow: __dirname + "/test_phantom_scripts/pow.js"
       };
 
-      bridge.initialise(scripts, function () {
+      ecto.initialise(scripts, function () {
         var args = {
           number: 2,
           exponent: 3
         };
 
-        bridge.run("pow", args, function (err, result) {
+        ecto.run("pow", args, function (err, result) {
           should.not.exist(err);
           result.should.equal(8);
           done();
@@ -144,12 +144,12 @@ describe("main", function () {
         pow: __dirname + "/test_phantom_scripts/pow.js"
       };
 
-      bridge.initialise(scripts, function () {
+      ecto.initialise(scripts, function () {
         var args = {
           thisIs: "wrong"
         };
 
-        bridge.run("pow", args, function (err, result) {
+        ecto.run("pow", args, function (err, result) {
           should.exist(err);
           should.not.exist(result);
           err.should.equal("needs to pass a number and exponent");
@@ -162,13 +162,13 @@ describe("main", function () {
         doSomething: __dirname + "/test_phantom_scripts/doSomething.js"
       };
 
-      bridge.initialise(scripts, function () {
+      ecto.initialise(scripts, function () {
         var args = {
           number: 2,
           exponent: 3
         };
 
-        bridge.run("doSomething", args, function (err) {
+        ecto.run("doSomething", args, function (err) {
           should.not.exist(err);
           done();
         });
