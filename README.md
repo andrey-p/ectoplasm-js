@@ -41,7 +41,7 @@ ecto.initialise(scripts, function (err) {
 
 Kills the Phantom process and stops the internal servers.
 
-### run(scriptName, args, callback)
+### run(scriptName, [args ...], callback)
 
 Runs a script that you've previously loaded, for example:
 
@@ -57,6 +57,8 @@ ecto.initialise(scripts, function (err) {
   });
 });
 ```
+
+Argument are optional, and you can have as many as you want in between your script name and callback.
 
 Scripts
 ---
@@ -74,11 +76,12 @@ exports.run = function (args, callback) {
 };
 ```
 
-Two scripts are already made available, `ping` and `addScripts`.
+You can pass any number of arguments back in your script.
 
-`ping` simply returns your args back to you - in case you want to test things.
+Two scripts are already made available:
 
-`addScripts` adds scripts at runtime, much like `initialise`:
+- `ping` simply returns your args back to you - in case you want to test things.
+- `addScripts` adds scripts at runtime, much like `initialise`:
 
 ```javascript
 ecto.run("addScripts", {
