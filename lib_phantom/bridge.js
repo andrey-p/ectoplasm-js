@@ -21,6 +21,12 @@ var port = phantom.args[0],
 function emit(eventName, id, args) {
   var js = "function () { socket.emit(\"" + eventName + "\"";
 
+  // we're assuming args is an array of function arguments
+  // if not, wrap it
+  if (!(args instanceof Array)) {
+    args = [args];
+  }
+
   if (id) {
     js += ", " + id + ", " + JSON.stringify(args);
   }
@@ -45,19 +51,14 @@ controlPage.onAlert = function (msg) {
   id = callArgs.id;
 
   if (!script) {
-    return emit("err", id, "tried running a script that didn't exist: " + callArgs.method);
+    return emit("output", id, "tried running a script that didn't exist: " + callArgs.method);
   }
 
   // add our own callback as the final argument of the function
   callArgs.args.push(function () {
-    var args = Array.prototype.slice.call(arguments),
-      err = args.shift();
+    var args = Array.prototype.slice.call(arguments);
 
-    if (err) {
-      emit("err", id, err);
-    } else {
-      emit("output", id, args);
-    }
+    emit("output", id, args);
   });
 
   // we use apply instead of calling directly
