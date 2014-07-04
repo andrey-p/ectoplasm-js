@@ -48,13 +48,18 @@ controlPage.onAlert = function (msg) {
     return emit("err", id, "tried running a script that didn't exist: " + callArgs.method);
   }
 
-  script.run(callArgs.args, function (err, output) {
+  // add our own callback as the final argument of the function
+  callArgs.args.push(function (err, output) {
     if (err) {
       emit("err", id, err);
     } else {
       emit("output", id, output);
     }
   });
+
+  // we use apply instead of calling directly
+  // because we receive args as an array
+  script.run.apply(null, callArgs.args);
 };
 
 addScriptsScript.run = function (args, callback) {
