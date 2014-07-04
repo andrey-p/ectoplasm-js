@@ -18,11 +18,17 @@ var port = phantom.args[0],
  * see the comments in lib/bridge.js
  */
 
-function emit(eventName, id, body) {
+function emit(eventName, id, args) {
   var js = "function () { socket.emit(\"" + eventName + "\"";
 
+  // we're assuming args is an array of function arguments
+  // if not, wrap it
+  if (!(args instanceof Array)) {
+    args = [args];
+  }
+
   if (id) {
-    js += ", " + id + ", " + JSON.stringify(body);
+    js += ", " + id + ", " + JSON.stringify(args);
   }
 
   js += ");}";
@@ -45,16 +51,19 @@ controlPage.onAlert = function (msg) {
   id = callArgs.id;
 
   if (!script) {
-    return emit("err", id, "tried running a script that didn't exist: " + callArgs.method);
+    return emit("output", id, "tried running a script that didn't exist: " + callArgs.method);
   }
 
-  script.run(callArgs.args, function (err, output) {
-    if (err) {
-      emit("err", id, err);
-    } else {
-      emit("output", id, output);
-    }
+  // add our own callback as the final argument of the function
+  callArgs.args.push(function () {
+    var args = Array.prototype.slice.call(arguments);
+
+    emit("output", id, args);
   });
+
+  // we use apply instead of calling directly
+  // because we receive args as an array
+  script.run.apply(null, callArgs.args);
 };
 
 addScriptsScript.run = function (args, callback) {

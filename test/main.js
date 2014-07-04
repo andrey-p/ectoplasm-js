@@ -174,5 +174,47 @@ describe("main", function () {
         });
       });
     });
+    it("should be able to run scripts with no arguments", function (done) {
+      var scripts = {
+        noArgs: __dirname + "/test_phantom_scripts/noArgs.js"
+      };
+
+      ecto.initialise(scripts, function (err) {
+        should.not.exist(err);
+        ecto.run("noArgs", function (err) {
+          should.not.exist(err);
+          done();
+        });
+      });
+    });
+    it("should be able to run scripts with a variable number of arguments", function (done) {
+      var scripts = {
+        multipleArgs: __dirname + "/test_phantom_scripts/multipleArgs.js"
+      };
+
+      ecto.initialise(scripts, function (err) {
+        should.not.exist(err);
+        ecto.run("multipleArgs", "arg1", "arg2", function (err) {
+          should.not.exist(err);
+          done();
+        });
+      });
+    });
+    it("should be able to receive multiple return values from scripts", function (done) {
+      var scripts = {
+        multipleArgs: __dirname + "/test_phantom_scripts/multipleArgs.js"
+      };
+
+      ecto.initialise(scripts, function (err) {
+        should.not.exist(err);
+        ecto.run("multipleArgs", "arg1", "arg2", function (err, arg1, arg2, arg3) {
+          should.not.exist(err);
+          arg1.should.equal("this");
+          arg2.should.equal("runs");
+          arg3.should.equal("ok");
+          done();
+        });
+      });
+    });
   });
 });
