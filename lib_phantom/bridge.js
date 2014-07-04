@@ -18,11 +18,11 @@ var port = phantom.args[0],
  * see the comments in lib/bridge.js
  */
 
-function emit(eventName, id, body) {
+function emit(eventName, id, args) {
   var js = "function () { socket.emit(\"" + eventName + "\"";
 
   if (id) {
-    js += ", " + id + ", " + JSON.stringify(body);
+    js += ", " + id + ", " + JSON.stringify(args);
   }
 
   js += ");}";
@@ -49,11 +49,14 @@ controlPage.onAlert = function (msg) {
   }
 
   // add our own callback as the final argument of the function
-  callArgs.args.push(function (err, output) {
+  callArgs.args.push(function () {
+    var args = Array.prototype.slice.call(arguments),
+      err = args.shift();
+
     if (err) {
       emit("err", id, err);
     } else {
-      emit("output", id, output);
+      emit("output", id, args);
     }
   });
 
