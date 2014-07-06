@@ -52,13 +52,13 @@ var ecto = require("ectoplasm"),
   };
 
 ecto.initialise(scripts, function (err) {
-  ecto.run("doThings", { foo: "bar", function (err, result) {
+  ecto.run("doThings", { foo: "bar" }, function (err, result) {
     // things have been done
   });
 });
 ```
 
-Argument are optional, and you can have as many as you want in between your script name and callback.
+`args` is optional, and you can have as many of them as you want (or none at all) between your script name and callback.
 
 Scripts
 ---
