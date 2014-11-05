@@ -13,7 +13,9 @@ describe("main", function () {
 
   describe("#initialise()", function () {
     afterEach(function (done) {
-      helper.killProcess("phantomjs", done);
+      helper.killProcess("phantomjs", function () {
+        ecto.cleanup(done);
+      });
     });
 
     it("should get a phantom process going", function (done) {
@@ -54,6 +56,13 @@ describe("main", function () {
       ecto.initialise(scripts, function (err) {
         should.exist(err);
         err.should.startWith("script wrong does not expose a #run() method");
+        done();
+      });
+    });
+    it("should fail with a meaningful error if trying to run a script before initialising", function (done) {
+      ecto.run("ping", function (err) {
+        should.exist(err);
+        err.should.startWith("attempted to run script before initialising");
         done();
       });
     });
