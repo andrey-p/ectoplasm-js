@@ -22,7 +22,7 @@ Installing
 API
 ---
 
-### initialise(scripts, callback) or initialize(scripts, callback)
+### initialise(scripts, [options], callback) or initialize(scripts, [options], callback)
 
 Pass your script names as an object, for instance:
 
@@ -34,6 +34,22 @@ var ecto = require("ectoplasm"),
 
 ecto.initialise(scripts, function (err) {
   // err is populated if it can't find the scripts
+});
+```
+
+`options` is an object. The only supported option for the moment is `phantomPath`. Set this if your PhantomJS binary is not in your `$PATH`:
+
+For instance, if you're using the excellent [phantomjs](https://www.npmjs.org/package/phantomjs) module, you'd do:
+
+```javascript
+var ecto = require("ectoplasm"),
+  phantomjs = require("phantomjs"),
+  scripts = {
+    doThings: "/absolute/path/to/doThings.js"
+  };
+
+ecto.initialise(scripts, { phantomPath: phantomjs.path }, function (err) {
+  // ...
 });
 ```
 

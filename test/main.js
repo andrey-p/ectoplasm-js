@@ -3,6 +3,7 @@
 var should = require("should"),
   async = require("async"),
   ecto = require("../lib/main"),
+  phantomjs = require("phantomjs"),
   helper = require("./helper");
 
 describe("main", function () {
@@ -63,6 +64,16 @@ describe("main", function () {
       ecto.run("ping", function (err) {
         should.exist(err);
         err.should.startWith("attempted to run script before initialising");
+        done();
+      });
+    });
+    it("should be possible to pass in a path to phantom in an options object", function (done) {
+      var scripts = {
+        pow: __dirname + "/test_phantom_scripts/pow.js"
+      };
+
+      ecto.initialise(scripts, { phantomPath: phantomjs.path }, function (err) {
+        should.not.exist(err);
         done();
       });
     });
