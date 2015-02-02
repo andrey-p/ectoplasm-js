@@ -5,9 +5,7 @@ var should = require("should"),
   ecto = require("../lib/main"),
   phantomjs = require("phantomjs"),
   helper = require("./helper"),
-  opts = {
-    phantomPath: phantomjs.path 
-  };
+  opts = { phantomPath: phantomjs.path };
 
 describe("main", function () {
   // clean up in case a test fails
