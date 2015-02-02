@@ -3,6 +3,8 @@ ECTOPLASM
 
 This is yet another bridge between NodeJS and PhantomJS.
 
+[![Build Status](https://travis-ci.org/andrey-p/ectoplasm-js.svg?branch=master)](https://travis-ci.org/andrey-p/ectoplasm-js)
+
 Why is this needed?
 ---
 
