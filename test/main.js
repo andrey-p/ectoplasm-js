@@ -4,7 +4,10 @@ var should = require("should"),
   async = require("async"),
   ecto = require("../lib/main"),
   phantomjs = require("phantomjs"),
-  helper = require("./helper");
+  helper = require("./helper"),
+  opts = {
+    phantomPath: phantomjs.path 
+  };
 
 describe("main", function () {
   // clean up in case a test fails
@@ -20,7 +23,7 @@ describe("main", function () {
     });
 
     it("should get a phantom process going", function (done) {
-      ecto.initialise(null, function () {
+      ecto.initialise(null, opts, function () {
         helper.checkIfProcessExists("phantomjs", function (err, exists) {
           should.not.exist(err);
           exists.should.equal(true, "phantom process should exist");
@@ -33,7 +36,7 @@ describe("main", function () {
         pow: __dirname + "/test_phantom_scripts/pow.js"
       };
 
-      ecto.initialise(scripts, function (err) {
+      ecto.initialise(scripts, opts, function (err) {
         should.not.exist(err);
         done();
       });
@@ -43,7 +46,7 @@ describe("main", function () {
         foo: "does/not/exist"
       };
 
-      ecto.initialise(scripts, function (err) {
+      ecto.initialise(scripts, opts, function (err) {
         should.exist(err);
         err.should.startWith("could not find");
         done();
@@ -54,7 +57,7 @@ describe("main", function () {
         wrong: __dirname + "/test_phantom_scripts/wrongScript.js"
       };
 
-      ecto.initialise(scripts, function (err) {
+      ecto.initialise(scripts, opts, function (err) {
         should.exist(err);
         err.should.startWith("script wrong does not expose a #run() method");
         done();
@@ -72,7 +75,7 @@ describe("main", function () {
         pow: __dirname + "/test_phantom_scripts/pow.js"
       };
 
-      ecto.initialise(scripts, { phantomPath: phantomjs.path }, function (err) {
+      ecto.initialise(scripts, opts, function (err) {
         should.not.exist(err);
         done();
       });
@@ -80,7 +83,7 @@ describe("main", function () {
   });
   describe("#cleanup()", function () {
     beforeEach(function (done) {
-      ecto.initialise(null, done);
+      ecto.initialise(null, opts, done);
     });
 
     it("should not leave a phantom process after running cleanup", function (done) {
@@ -95,7 +98,7 @@ describe("main", function () {
   });
   describe("#run()", function () {
     beforeEach(function (done) {
-      ecto.initialise(null, done);
+      ecto.initialise(null, opts, done);
     });
     afterEach(ecto.cleanup);
 
@@ -146,7 +149,7 @@ describe("main", function () {
         pow: __dirname + "/test_phantom_scripts/pow.js"
       };
 
-      ecto.initialise(scripts, function () {
+      ecto.initialise(scripts, opts, function () {
         var args = {
           number: 2,
           exponent: 3
@@ -164,7 +167,7 @@ describe("main", function () {
         pow: __dirname + "/test_phantom_scripts/pow.js"
       };
 
-      ecto.initialise(scripts, function () {
+      ecto.initialise(scripts, opts, function () {
         var args = {
           thisIs: "wrong"
         };
@@ -182,7 +185,7 @@ describe("main", function () {
         doSomething: __dirname + "/test_phantom_scripts/doSomething.js"
       };
 
-      ecto.initialise(scripts, function () {
+      ecto.initialise(scripts, opts, function () {
         var args = {
           number: 2,
           exponent: 3
@@ -199,7 +202,7 @@ describe("main", function () {
         noArgs: __dirname + "/test_phantom_scripts/noArgs.js"
       };
 
-      ecto.initialise(scripts, function (err) {
+      ecto.initialise(scripts, opts, function (err) {
         should.not.exist(err);
         ecto.run("noArgs", function (err) {
           should.not.exist(err);
@@ -212,7 +215,7 @@ describe("main", function () {
         multipleArgs: __dirname + "/test_phantom_scripts/multipleArgs.js"
       };
 
-      ecto.initialise(scripts, function (err) {
+      ecto.initialise(scripts, opts, function (err) {
         should.not.exist(err);
         ecto.run("multipleArgs", "arg1", "arg2", function (err) {
           should.not.exist(err);
@@ -225,7 +228,7 @@ describe("main", function () {
         multipleArgs: __dirname + "/test_phantom_scripts/multipleArgs.js"
       };
 
-      ecto.initialise(scripts, function (err) {
+      ecto.initialise(scripts, opts, function (err) {
         should.not.exist(err);
         ecto.run("multipleArgs", "arg1", "arg2", function (err, arg1, arg2, arg3) {
           should.not.exist(err);
