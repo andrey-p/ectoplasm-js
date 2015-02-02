@@ -19,7 +19,7 @@ var port = phantom.args[0],
  */
 
 function emit(eventName, id, args) {
-  var js = "function () { socket.emit(\"" + eventName + "\"";
+  var js = "function () { window.socket.emit(\"" + eventName + "\"";
 
   // we're assuming args is an array of function arguments
   // if not, wrap it
