@@ -15,15 +15,14 @@
     "url": "git@github.com:andrey-p/ectoplasm-js.git"
   },
   "dependencies": {
-    "socket.io": "^1.3.2"
+    "socket.io": "^1.3.5"
   },
   "devDependencies": {
-    "phantomjs": "^1.9.7-10",
     "async": "^0.9.0",
-    "jslint": "^0.5.2",
+    "jslint": "^0.9.0-pre005",
     "lorem-ipsum": "^1.0.1",
-    "mocha": "^1.20.1",
-    "should": "^4.0.4"
+    "mocha": "^2.2.1",
+    "phantomjs": "^1.9.16",
+    "should": "^5.1.0"
   }
 }
-
