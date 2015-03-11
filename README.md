@@ -78,6 +78,17 @@ ecto.initialise(scripts, function (err) {
 
 `args` is optional, and you can have as many of them as you want (or none at all) between your script name and callback.
 
+**NOTE**: `args` is serialized to JSON as it's passed to the Phantom side. Be wary of trying to pass values that can't be serialized. For example:
+
+```javascript
+var args = {
+  foo: "bar",
+  baz: function () { return "Hello!"; }
+};
+
+// the frontend will only receive { foo: "bar" }
+```
+
 Scripts
 ---
 
