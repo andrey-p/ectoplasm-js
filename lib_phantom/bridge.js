@@ -5,6 +5,7 @@ var port = phantom.args[0],
   controlPage = require("webpage").create(),
   system = require("system"),
   addScriptsScript = {},
+  debug = false,
   scripts = {
     ping: require("./ping"),
     addScripts: addScriptsScript
@@ -58,6 +59,10 @@ controlPage.onAlert = function (msg) {
   callArgs.args.push(function () {
     var args = Array.prototype.slice.call(arguments);
 
+    if (debug) {
+      console.log("returning from script", callArgs.method, "with arguments:", JSON.stringify(args));
+    }
+
     emit("output", id, args);
   });
 
@@ -66,8 +71,11 @@ controlPage.onAlert = function (msg) {
   script.run.apply(null, callArgs.args);
 };
 
-addScriptsScript.run = function (args, callback) {
+addScriptsScript.run = function (args, opts, callback) {
   var noError = true;
+
+  debug = opts.debug;
+
   Object.keys(args).forEach(function (scriptName) {
     try {
       scripts[scriptName] = require(args[scriptName]);

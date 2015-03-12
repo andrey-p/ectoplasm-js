@@ -39,7 +39,11 @@ ecto.initialise(scripts, function (err) {
 });
 ```
 
-`options` is an object. The only supported option for the moment is `phantomPath`. Set this if your PhantomJS binary is not in your `$PATH`:
+`options` is an object. The options supported for the moment are `phantomPath` and `debug`.
+
+#### phantomPath
+
+Set this if your PhantomJS binary is not in your `$PATH`:
 
 For instance, if you're using the excellent [phantomjs](https://www.npmjs.org/package/phantomjs) module, you'd do:
 
@@ -54,6 +58,10 @@ ecto.initialise(scripts, { phantomPath: phantomjs.path }, function (err) {
   // ...
 });
 ```
+
+#### debug
+
+Set this to `true` for detailed debugging information. It also enables tracing of all console messages from the Phantom process.
 
 ### cleanup(callback)
 
